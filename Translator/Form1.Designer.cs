@@ -1,4 +1,6 @@
-﻿namespace Translator
+﻿using System.Drawing;
+
+namespace Translator
 {
     partial class Form1
     {
@@ -127,7 +129,9 @@
             this.outputTextBox.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.outputTextBox.Location = new System.Drawing.Point(3, 245);
             this.outputTextBox.Name = "outputTextBox";
+            this.outputTextBox.ReadOnly = true;
             this.outputTextBox.Size = new System.Drawing.Size(528, 186);
+            this.outputTextBox.BackColor = Color.White;
             this.outputTextBox.TabIndex = 1;
             this.outputTextBox.Text = "";
             // 
@@ -140,6 +144,7 @@
             this.translateButton.TabIndex = 2;
             this.translateButton.Text = "Translate!";
             this.translateButton.UseVisualStyleBackColor = true;
+            this.translateButton.Click += new System.EventHandler(this.translateButton_Click);
             // 
             // listView
             // 

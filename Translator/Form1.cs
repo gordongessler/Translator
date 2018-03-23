@@ -79,7 +79,8 @@ namespace Translator
 
         private void exportMenuItem_Click(object sender, EventArgs e)
         {
-            //TODO: Add Exception handeling
+            //TODO: Add Exception handling
+
             if (saveFileDialog.ShowDialog() == DialogResult.OK && saveFileDialog.FileName != "" && listView.Columns.Count>=2)
             {
                 using (StreamWriter sw = new StreamWriter(saveFileDialog.FileName))
@@ -87,11 +88,62 @@ namespace Translator
                     sw.WriteLine(listView.Columns[0].Text + " " + listView.Columns[1].Text);
                     for (int i =0; i<listView.Items.Count; i++)
                     {
-                        sw.WriteLine(listView.Items[i].Text + " " + listView.Items[i].SubItems[1].Text);
+                        sw.WriteLine(listView.Items[i].SubItems[1].Text + " " + listView.Items[i].SubItems[1].Text);
                     }
+                    sw.Close();
                 }
             }
         }
-        
+
+        private void translateButton_Click(object sender, EventArgs e)
+        {
+            string input = inputTextBox.Text;
+            for (int i = 0; i < listView.Items.Count; i++)
+            {
+                input = Regex.Replace(input, listView.Items[i].SubItems[0].Text, listView.Items[i].SubItems[1].Text, RegexOptions.IgnoreCase);
+            }
+
+            //TODO: Make the output word start with a capital letter if the source word started with one. This is not required by the task nor is it implemented in the example app
+
+            outputTextBox.Text = input;
+
+            //Make everything red
+            outputTextBox.SelectAll();
+            outputTextBox.SelectionColor = Color.Red;
+            
+            //Make translated words black
+            for (int i = 0; i < listView.Items.Count; i++)
+            {
+                ChangeColor(listView.Items[i].SubItems[1].Text,Color.Black,0);
+            }
+
+            //Make all puncuation and numbers black as well
+            for(char c = ' '; c < 'A'; c++)
+            {
+                ChangeColor(c+"", Color.Black, 0);
+            }
+            for (char c = '['; c < 'a'; c++)
+            {
+                ChangeColor(c + "", Color.Black, 0);
+            }
+        }
+
+        private void ChangeColor(string word, Color color, int startIndex)
+        {
+            if (this.outputTextBox.Text.Contains(word))
+            {
+                int index = -1;
+                int selectStart = this.outputTextBox.SelectionStart;
+
+                while ((index = this.outputTextBox.Text.IndexOf(word, (index + 1))) != -1)
+                {
+                    this.outputTextBox.Select((index + startIndex), word.Length);
+                    this.outputTextBox.SelectionColor = color;
+                    this.outputTextBox.Select(selectStart, 0);
+                    this.outputTextBox.SelectionColor = Color.Black;
+                }
+            }
+        }
+
     }
 }
