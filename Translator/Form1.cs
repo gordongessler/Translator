@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +16,7 @@ namespace Translator
 {
     public partial class Form1 : Form
     {
+        SortOrder sort = SortOrder.None;
         public Form1()
         {
             InitializeComponent();
@@ -90,7 +92,7 @@ namespace Translator
                     sw.WriteLine(listView.Columns[0].Text + " " + listView.Columns[1].Text);
                     for (int i =0; i<listView.Items.Count; i++)
                     {
-                        sw.WriteLine(listView.Items[i].SubItems[1].Text + " " + listView.Items[i].SubItems[1].Text);
+                        sw.WriteLine(listView.Items[i].SubItems[0].Text + " " + listView.Items[i].SubItems[1].Text);
                     }
                     sw.Close();
                 }
@@ -160,5 +162,60 @@ namespace Translator
                 listView.Columns[1].Width = listView.Width / 2;
             }
         }
+
+        private void listView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Delete)
+            {
+                foreach( ListViewItem item in listView.SelectedItems)
+                {
+                   listView.Items.Remove(item);
+                }
+            }
+        }
+
+        private void listView_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+
+            sort = sort == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+
+            if (sort == SortOrder.Ascending)
+            {
+                this.listView.ListViewItemSorter = new ListViewItemComparer(e.Column, SortOrder.Ascending);
+            }
+            else
+            {
+                this.listView.ListViewItemSorter = new ListViewItemComparer(e.Column, SortOrder.Descending);
+            }
+        }
+    }
+
+    class ListViewItemComparer : IComparer
+    {
+        private int col;
+        public SortOrder so;
+        public ListViewItemComparer()
+        {
+            col = 0;
+            so = SortOrder.Ascending;
+        }
+        public ListViewItemComparer(int column, SortOrder order)
+        {
+            col = column;
+            so = order;
+        }
+        public int Compare(object x, object y)
+        {
+            if (so == SortOrder.Ascending)
+            {
+                return String.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text);
+            }
+            else
+            {
+                return -String.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text);
+            }
+        }
     }
 }
+
+
