@@ -188,6 +188,19 @@ namespace Translator
                 this.listView.ListViewItemSorter = new ListViewItemComparer(e.Column, SortOrder.Descending);
             }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            InputDialog inputDialog = new InputDialog();
+            if(inputDialog.Show("Add a new word", listView.Columns[0].Text, listView.Columns[1].Text) == DialogResult.OK)
+            {
+                ListViewItem li = new ListViewItem();
+                li.Text = inputDialog.source;
+                li.SubItems.Add(inputDialog.target);
+                listView.Items.Add(li);
+            }
+            //add string validation
+        }
     }
 
     class ListViewItemComparer : IComparer
