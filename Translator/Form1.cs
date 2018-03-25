@@ -63,6 +63,8 @@ namespace Translator
                                     {
                                         listView.Columns.Add(words[0]);
                                         listView.Columns.Add(words[1]);
+                                        listView.Columns[0].Width = listView.Width/2;
+                                        listView.Columns[1].Width = listView.Width / 2;
                                         addedCollmuns = true;
                                     }
                                 }
@@ -145,5 +147,18 @@ namespace Translator
             }
         }
 
+        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+
+        }
+
+        private void listView_Resize(object sender, EventArgs e)
+        {
+            if (listView.Columns.Count >= 2)
+            {
+                listView.Columns[0].Width = listView.Width / 2;
+                listView.Columns[1].Width = listView.Width / 2;
+            }
+        }
     }
 }
