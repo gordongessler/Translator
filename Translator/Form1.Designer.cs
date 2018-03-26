@@ -39,11 +39,23 @@ namespace Translator
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.listView = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.button1 = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.inputTextBox = new System.Windows.Forms.RichTextBox();
             this.outputTextBox = new System.Windows.Forms.RichTextBox();
             this.translateButton = new System.Windows.Forms.Button();
+            this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
+            this.inputTextBox = new System.Windows.Forms.RichTextBox();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButtonBold = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonItalic = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonUnderline = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonFontColor = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonBgColor = new System.Windows.Forms.ToolStripButton();
+            this.toolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
+            this.colorDialog = new System.Windows.Forms.ColorDialog();
+            this.colorDialogBg = new System.Windows.Forms.ColorDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -51,6 +63,10 @@ namespace Translator
             this.splitContainer1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.toolStripContainer1.ContentPanel.SuspendLayout();
+            this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
+            this.toolStripContainer1.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -138,6 +154,9 @@ namespace Translator
             // 
             // listView
             // 
+            this.listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2});
             this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView.FullRowSelect = true;
             this.listView.GridLines = true;
@@ -150,10 +169,14 @@ namespace Translator
             this.listView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listView_ColumnClick);
             this.listView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView_KeyDown);
             this.listView.Resize += new System.EventHandler(this.listView_Resize);
-            this.listView.Columns.Add("English");
-            this.listView.Columns.Add("Polish");
-            listView.Columns[0].Width = listView.Width / 2;
-            listView.Columns[1].Width = listView.Width / 2;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "English";
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Polski";
             // 
             // button1
             // 
@@ -171,9 +194,9 @@ namespace Translator
             this.tableLayoutPanel2.BackColor = System.Drawing.SystemColors.Control;
             this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.inputTextBox, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.outputTextBox, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.translateButton, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.toolStripContainer1, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -183,16 +206,6 @@ namespace Translator
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(485, 440);
             this.tableLayoutPanel2.TabIndex = 3;
-            // 
-            // inputTextBox
-            // 
-            this.inputTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.inputTextBox.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.inputTextBox.Location = new System.Drawing.Point(3, 3);
-            this.inputTextBox.Name = "inputTextBox";
-            this.inputTextBox.Size = new System.Drawing.Size(479, 189);
-            this.inputTextBox.TabIndex = 0;
-            this.inputTextBox.Text = "";
             // 
             // outputTextBox
             // 
@@ -217,6 +230,108 @@ namespace Translator
             this.translateButton.UseVisualStyleBackColor = true;
             this.translateButton.Click += new System.EventHandler(this.translateButton_Click);
             // 
+            // toolStripContainer1
+            // 
+            // 
+            // toolStripContainer1.ContentPanel
+            // 
+            this.toolStripContainer1.ContentPanel.Controls.Add(this.inputTextBox);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(479, 164);
+            this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toolStripContainer1.LeftToolStripPanelVisible = false;
+            this.toolStripContainer1.Location = new System.Drawing.Point(3, 3);
+            this.toolStripContainer1.Name = "toolStripContainer1";
+            this.toolStripContainer1.RightToolStripPanelVisible = false;
+            this.toolStripContainer1.Size = new System.Drawing.Size(479, 189);
+            this.toolStripContainer1.TabIndex = 3;
+            this.toolStripContainer1.Text = "toolStripContainer1";
+            // 
+            // toolStripContainer1.TopToolStripPanel
+            // 
+            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.toolStrip1);
+            // 
+            // inputTextBox
+            // 
+            this.inputTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.inputTextBox.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.inputTextBox.Location = new System.Drawing.Point(0, 0);
+            this.inputTextBox.Name = "inputTextBox";
+            this.inputTextBox.Size = new System.Drawing.Size(479, 164);
+            this.inputTextBox.TabIndex = 1;
+            this.inputTextBox.Text = "";
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonBold,
+            this.toolStripButtonItalic,
+            this.toolStripButtonUnderline,
+            this.toolStripButtonFontColor,
+            this.toolStripButtonBgColor,
+            this.toolStripComboBox});
+            this.toolStrip1.Location = new System.Drawing.Point(3, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(310, 25);
+            this.toolStrip1.TabIndex = 0;
+            // 
+            // toolStripButtonBold
+            // 
+            this.toolStripButtonBold.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonBold.Image = global::Translator.Resource1.Bold;
+            this.toolStripButtonBold.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonBold.Name = "toolStripButtonBold";
+            this.toolStripButtonBold.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonBold.Text = "Bold";
+            this.toolStripButtonBold.Click += new System.EventHandler(this.toolStripButtonBold_Click);
+            // 
+            // toolStripButtonItalic
+            // 
+            this.toolStripButtonItalic.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonItalic.Image = global::Translator.Resource1.Italic;
+            this.toolStripButtonItalic.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonItalic.Name = "toolStripButtonItalic";
+            this.toolStripButtonItalic.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonItalic.Text = "Italic";
+            this.toolStripButtonItalic.Click += new System.EventHandler(this.toolStripButtonItalic_Click);
+            // 
+            // toolStripButtonUnderline
+            // 
+            this.toolStripButtonUnderline.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonUnderline.Image = global::Translator.Resource1.Underline;
+            this.toolStripButtonUnderline.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonUnderline.Name = "toolStripButtonUnderline";
+            this.toolStripButtonUnderline.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonUnderline.Text = "Underline";
+            this.toolStripButtonUnderline.Click += new System.EventHandler(this.toolStripButtonUnderline_Click);
+            // 
+            // toolStripButtonFontColor
+            // 
+            this.toolStripButtonFontColor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonFontColor.Image = global::Translator.Resource1.FontColor;
+            this.toolStripButtonFontColor.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonFontColor.Name = "toolStripButtonFontColor";
+            this.toolStripButtonFontColor.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonFontColor.Text = "Font color";
+            this.toolStripButtonFontColor.Click += new System.EventHandler(this.toolStripButtonFontColor_Click);
+            // 
+            // toolStripButtonBgColor
+            // 
+            this.toolStripButtonBgColor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonBgColor.Image = global::Translator.Resource1.BackColor;
+            this.toolStripButtonBgColor.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonBgColor.Name = "toolStripButtonBgColor";
+            this.toolStripButtonBgColor.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonBgColor.Text = "Background color";
+            this.toolStripButtonBgColor.Click += new System.EventHandler(this.toolStripButtonBgColor_Click);
+            // 
+            // toolStripComboBox
+            // 
+            this.toolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolStripComboBox.Name = "toolStripComboBox";
+            this.toolStripComboBox.Size = new System.Drawing.Size(150, 25);
+            this.toolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox_SelectedIndexChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -236,6 +351,13 @@ namespace Translator
             this.splitContainer1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
+            this.toolStripContainer1.ContentPanel.ResumeLayout(false);
+            this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
+            this.toolStripContainer1.TopToolStripPanel.PerformLayout();
+            this.toolStripContainer1.ResumeLayout(false);
+            this.toolStripContainer1.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -251,12 +373,24 @@ namespace Translator
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.RichTextBox inputTextBox;
         private System.Windows.Forms.RichTextBox outputTextBox;
         private System.Windows.Forms.Button translateButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.ListView listView;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ToolStripContainer toolStripContainer1;
+        private System.Windows.Forms.RichTextBox inputTextBox;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton toolStripButtonBold;
+        private System.Windows.Forms.ToolStripButton toolStripButtonItalic;
+        private System.Windows.Forms.ToolStripButton toolStripButtonUnderline;
+        private System.Windows.Forms.ToolStripButton toolStripButtonFontColor;
+        private System.Windows.Forms.ToolStripButton toolStripButtonBgColor;
+        private System.Windows.Forms.ToolStripComboBox toolStripComboBox;
+        private System.Windows.Forms.ColorDialog colorDialog;
+        private System.Windows.Forms.ColorDialog colorDialogBg;
     }
 }
 

@@ -20,13 +20,16 @@ namespace Translator
         public Form1()
         {
             InitializeComponent();
-        }
+            this.listView.Columns[0].Width = listView.Width / 2;
+            this.listView.Columns[1].Width = listView.Width / 2;
 
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
+            foreach (FontFamily font in System.Drawing.FontFamily.Families)
+            {
+                toolStripComboBox.Items.Add(font.Name);
+            }
+            toolStripComboBox.SelectedIndex = toolStripComboBox.FindString("Calibri");
         }
-        
+                
         private void loadMenuItem_Click(object sender, EventArgs e)
         {
             Stream myStream = null;
@@ -200,6 +203,81 @@ namespace Translator
                 listView.Items.Add(li);
             }
             //add string validation
+        }
+
+        private void toolStripButtonBold_Click(object sender, EventArgs e)
+        {
+            if (inputTextBox.Font.Bold)
+            {
+                inputTextBox.Font = new Font(inputTextBox.Font, FontStyle.Bold ^ inputTextBox.Font.Style);
+                toolStripButtonBold.Checked = false;
+            }
+            else
+            {
+                inputTextBox.Font = new Font(inputTextBox.Font, FontStyle.Bold | inputTextBox.Font.Style);
+                toolStripButtonBold.Checked = true;
+            }
+            setColor();
+        }
+
+        private void toolStripButtonItalic_Click(object sender, EventArgs e)
+        {
+            if (inputTextBox.Font.Italic)
+            {
+                inputTextBox.Font = new Font(inputTextBox.Font, FontStyle.Italic ^ inputTextBox.Font.Style);
+                toolStripButtonItalic.Checked = false;
+            }
+            else
+            {
+                inputTextBox.Font = new Font(inputTextBox.Font, FontStyle.Italic | inputTextBox.Font.Style);
+                toolStripButtonItalic.Checked = true;
+            }
+            setColor();
+        }
+
+        private void toolStripButtonUnderline_Click(object sender, EventArgs e)
+        {
+            if (inputTextBox.Font.Underline)
+            {
+                inputTextBox.Font = new Font(inputTextBox.Font, FontStyle.Underline ^ inputTextBox.Font.Style);
+                toolStripButtonUnderline.Checked = false;
+            }
+            else
+            {
+                inputTextBox.Font = new Font(inputTextBox.Font, FontStyle.Underline | inputTextBox.Font.Style);
+                toolStripButtonUnderline.Checked = true;
+            }
+            setColor();
+        }
+
+        private void toolStripButtonFontColor_Click(object sender, EventArgs e)
+        {
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                setColor();
+            }
+        }
+
+
+        private void toolStripButtonBgColor_Click(object sender, EventArgs e)
+        {
+            if (colorDialogBg.ShowDialog() == DialogResult.OK)
+            {
+                inputTextBox.BackColor = colorDialogBg.Color;
+            }
+        }
+        private void setColor()
+        {
+            int start = inputTextBox.SelectionStart;
+            int lenght = inputTextBox.SelectionLength;
+            inputTextBox.SelectAll();
+            inputTextBox.SelectionColor = colorDialog.Color;
+            inputTextBox.Select(start, lenght);
+        }
+
+        private void toolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+           inputTextBox.Font = new Font(toolStripComboBox.Text, 12, inputTextBox.Font.Style);
         }
     }
 
