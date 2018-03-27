@@ -17,6 +17,8 @@ namespace Translator
     public partial class Form1 : Form
     {
         SortOrder sort = SortOrder.None;
+        Regex r = new Regex(@"^[a-zA-Z]+ [a-zA-Z]+$");
+        Regex r2 = new Regex(@"^[a-zA-Z]+$");
         public Form1()
         {
             InitializeComponent();
@@ -33,7 +35,6 @@ namespace Translator
         private void loadMenuItem_Click(object sender, EventArgs e)
         {
             Stream myStream = null;
-            Regex r = new Regex(@"^[a-zA-Z]+ [a-zA-Z]+$");
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 try
@@ -50,13 +51,19 @@ namespace Translator
 
                             //Clear previous data
                             listView.Columns.Clear();
-                            listView.Items.Clear();
-
+                            listView.Items.Clear();                            
                             while ((line = sr.ReadLine()) != null)
                             {
                                 line.Trim();
                                 if (r.IsMatch(line)) {
+                                    bool skip = false;
                                     string[] words = line.Split();
+                                    foreach(ListViewItem l in listView.Items)
+                                    {
+                                        if (l.Text == words[0])
+                                            skip = true;
+                                    }
+                                    if (skip) continue; //dont add duplicates
                                     if (addedCollmuns)
                                     {
                                         ListViewItem li = new ListViewItem();
@@ -104,53 +111,45 @@ namespace Translator
 
         private void translateButton_Click(object sender, EventArgs e)
         {
-            string input = inputTextBox.Text;
-            for (int i = 0; i < listView.Items.Count; i++)
+            StringComparer stringComparer = StringComparer.CurrentCultureIgnoreCase;
+            outputTextBox.Text = "";
+            string[] lines = inputTextBox.Text.Split('\n');
+            for ( int j = 0; j<lines.Count();j++)
             {
-                input = Regex.Replace(input, listView.Items[i].SubItems[0].Text, listView.Items[i].SubItems[1].Text, RegexOptions.IgnoreCase);
-            }
-
-            //TODO: Make the output word start with a capital letter if the source word started with one. This is not required by the task nor is it implemented in the example app
-
-            outputTextBox.Text = input;
-
-            //Make everything red
-            outputTextBox.SelectAll();
-            outputTextBox.SelectionColor = Color.Red;
-            
-            //Make translated words black
-            for (int i = 0; i < listView.Items.Count; i++)
-            {
-                ChangeColor(listView.Items[i].SubItems[1].Text,Color.Black,0);
-            }
-
-            //Make all puncuation and numbers black as well
-            for(char c = ' '; c < 'A'; c++)
-            {
-                ChangeColor(c+"", Color.Black, 0);
-            }
-            for (char c = '['; c < 'a'; c++)
-            {
-                ChangeColor(c + "", Color.Black, 0);
-            }
-        }
-
-        private void ChangeColor(string word, Color color, int startIndex)
-        {
-            if (this.outputTextBox.Text.Contains(word))
-            {
-                int index = -1;
-                int selectStart = this.outputTextBox.SelectionStart;
-
-                while ((index = this.outputTextBox.Text.IndexOf(word, (index + 1))) != -1)
+                string s = lines[j];
+                if(j!=0)outputTextBox.AppendText("\n");
+                string[] words = s.Split(' ');
+                for (int i = 0; i < words.Count(); i++)
                 {
-                    this.outputTextBox.Select((index + startIndex), word.Length);
-                    this.outputTextBox.SelectionColor = color;
-                    this.outputTextBox.Select(selectStart, 0);
-                    this.outputTextBox.SelectionColor = Color.Black;
+                    if(i!=0) outputTextBox.AppendText(" ");
+                    bool added = false;
+                    foreach (ListViewItem l in listView.Items)
+                    {
+                        if (stringComparer.Equals(l.Text, words[i].Trim()))
+                        {
+                            added = true;
+                            string newWord = Regex.Replace(words[i],l.Text, l.SubItems[1].Text,RegexOptions.IgnoreCase);
+                            outputTextBox.SelectionStart = outputTextBox.Text.Length;
+                            var oldcolor = outputTextBox.SelectionColor;
+                            outputTextBox.SelectionColor = Color.Black;
+                            outputTextBox.AppendText(newWord);
+                            outputTextBox.SelectionColor = oldcolor;
+
+                        }
+                    }
+                    if (!added)
+                    {
+                        outputTextBox.SelectionStart = outputTextBox.Text.Length;
+                        var oldcolor = outputTextBox.SelectionColor;
+                        outputTextBox.SelectionColor = Color.Red;
+                        outputTextBox.AppendText(words[i]);
+                        outputTextBox.SelectionColor = oldcolor;
+                    }
                 }
+                outputTextBox.DeselectAll();
             }
         }
+
 
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
         {
@@ -195,14 +194,13 @@ namespace Translator
         private void button1_Click(object sender, EventArgs e)
         {
             InputDialog inputDialog = new InputDialog();
-            if(inputDialog.Show("Add a new word", listView.Columns[0].Text, listView.Columns[1].Text) == DialogResult.OK)
+            if(inputDialog.Show("Add a new word", listView.Columns[0].Text, listView.Columns[1].Text,"") == DialogResult.OK)
             {
                 ListViewItem li = new ListViewItem();
                 li.Text = inputDialog.source;
                 li.SubItems.Add(inputDialog.target);
                 listView.Items.Add(li);
             }
-            //add string validation
         }
 
         private void toolStripButtonBold_Click(object sender, EventArgs e)
@@ -279,7 +277,124 @@ namespace Translator
         {
            inputTextBox.Font = new Font(toolStripComboBox.Text, 12, inputTextBox.Font.Style);
         }
+        private void listView_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
+        }
+
+        private void listView_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (string file in files)
+            {
+                if (file.EndsWith(".txt")) { 
+                StreamReader sr = new StreamReader(file);
+
+                //Read the file line by line and add the lines to a collection
+                string line;
+                bool addedCollmuns = false;
+
+                //Clear previous data
+                listView.Columns.Clear();
+                listView.Items.Clear();
+                while ((line = sr.ReadLine()) != null)
+                {
+                    line.Trim();
+                    if (r.IsMatch(line))
+                    {
+                        bool skip = false;
+                        string[] words = line.Split();
+                        foreach (ListViewItem l in listView.Items)
+                        {
+                            if (l.Text == words[0])
+                                skip = true;
+                        }
+                        if (skip) continue; //dont add duplicates
+                        if (addedCollmuns)
+                        {
+                            ListViewItem li = new ListViewItem();
+                            li.Text = words[0];
+                            li.SubItems.Add(words[1]);
+                            listView.Items.Add(li);
+                        }
+                        else
+                        {
+                            listView.Columns.Add(words[0]);
+                            listView.Columns.Add(words[1]);
+                            listView.Columns[0].Width = listView.Width / 2;
+                            listView.Columns[1].Width = listView.Width / 2;
+                            addedCollmuns = true;
+                        }
+                    }
+                   }
+                }
+            }
+
+        }
+
+        private string WordUnderMouse(RichTextBox outputTextBox, int x, int y)
+        {
+            int pos = outputTextBox.GetCharIndexFromPosition(outputTextBox.PointToClient(Cursor.Position));
+            if (pos <= 0) return "";
+
+            string txt = outputTextBox.Text;
+
+            int start_pos;
+            for (start_pos = pos; start_pos > 0; start_pos--)
+            {
+                char ch = txt[start_pos];
+                if (char.IsWhiteSpace(ch)) break;
+            }
+
+
+            int end_pos;
+            for (end_pos = pos; end_pos < txt.Length; end_pos++)
+            {
+                char ch = txt[end_pos];
+                if (char.IsWhiteSpace(ch)) break;
+            }
+
+            if (start_pos > end_pos) return "";
+            return txt.Substring(start_pos, end_pos - start_pos);
+           
+        }
+
+        private void outputTextBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            switch (e.Button)
+            {
+                case MouseButtons.Right:
+                    {
+                        string word = WordUnderMouse(outputTextBox, Cursor.Position.X, Cursor.Position.Y).Trim();
+                        if (String.IsNullOrWhiteSpace(word)) return;
+                        foreach(ListViewItem l in listView.Items)
+                        {
+                            if (l.SubItems[1].Text == word) return;
+                        }
+                        contextMenuStrip1.Items.Clear();
+                        contextMenuStrip1.Items.Add("ADD " + word);
+                        contextMenuStrip1.Items[0].Click += addToolStripMenuItem_Click;
+                        contextMenuStrip1.Show(outputTextBox, new Point(e.X, e.Y));
+                        
+                    }
+                    break;
+            }
+        }
+
+        private void addToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InputDialog inputDialog = new InputDialog();
+            if (inputDialog.Show("Add a new word", listView.Columns[0].Text, listView.Columns[1].Text, WordUnderMouse(outputTextBox, Cursor.Position.X, Cursor.Position.Y).Trim()) == DialogResult.OK)
+            {
+                ListViewItem li = new ListViewItem();
+                li.Text = inputDialog.source;
+                li.SubItems.Add(inputDialog.target);
+                listView.Items.Add(li);
+            }
+        }
     }
+
+
 
     class ListViewItemComparer : IComparer
     {
