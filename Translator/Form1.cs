@@ -276,6 +276,7 @@ namespace Translator
         private void toolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
            inputTextBox.Font = new Font(toolStripComboBox.Text, 12, inputTextBox.Font.Style);
+            setColor();
         }
         private void listView_DragEnter(object sender, DragEventArgs e)
         {
