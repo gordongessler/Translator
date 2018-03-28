@@ -384,7 +384,7 @@ namespace Translator
         private void addToolStripMenuItem_Click(object sender, EventArgs e)
         {
             InputDialog inputDialog = new InputDialog();
-            if (inputDialog.Show("Add a new word", listView.Columns[0].Text, listView.Columns[1].Text, WordUnderMouse(outputTextBox, Cursor.Position.X, Cursor.Position.Y).Trim()) == DialogResult.OK)
+            if (inputDialog.Show("Add a new word", listView.Columns[0].Text, listView.Columns[1].Text, contextMenuStrip1.Items[0].Text.Substring(3).Trim()) == DialogResult.OK)
             {
                 ListViewItem li = new ListViewItem();
                 li.Text = inputDialog.source;
