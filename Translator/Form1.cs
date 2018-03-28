@@ -150,12 +150,6 @@ namespace Translator
             }
         }
 
-
-        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-
-        }
-
         private void listView_Resize(object sender, EventArgs e)
         {
             if (listView.Columns.Count >= 2)
@@ -255,8 +249,7 @@ namespace Translator
                 setColor();
             }
         }
-
-
+        
         private void toolStripButtonBgColor_Click(object sender, EventArgs e)
         {
             if (colorDialogBg.ShowDialog() == DialogResult.OK)
@@ -291,7 +284,6 @@ namespace Translator
                 if (file.EndsWith(".txt")) { 
                 StreamReader sr = new StreamReader(file);
 
-                //Read the file line by line and add the lines to a collection
                 string line;
                 bool addedCollmuns = false;
 
@@ -394,8 +386,6 @@ namespace Translator
             }
         }
     }
-
-
 
     class ListViewItemComparer : IComparer
     {
